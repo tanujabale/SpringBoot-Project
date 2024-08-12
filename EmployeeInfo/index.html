@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Management</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Employee Management</h1>
+    </header>
+    <div>
+        <h2>Add Employee</h2>
+        <form id="employee-form">
+            <label for="employeeName">Name:</label>
+            <input type="text" id="employeeName" name="employeeName" required><br>
+
+            <label for="mobile">Mobile:</label>
+            <input type="text" id="mobile" name="mobile" required><br>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required><br>
+
+            <label for="salary">Salary:</label>
+            <input type="number" id="salary" name="salary" required><br>
+
+            <label for="designation">Designation:</label>
+            <input type="text" id="designation" name="designation" required><br>
+
+            <label for="alternativeMobile">Alternative Mobile:</label>
+            <input type="text" id="alternativeMobile" name="alternativeMobile"><br>
+
+            <button type="submit">Add Employee</button>
+        </form>
+    </div>
+    <div>
+        <h2>Employee List</h2>
+        <div id="employee-list"></div>
+    </div>
+   <script></script>
+    document.addEventListener("DOMContentLoaded", function () {
+        fetch('http://localhost:8080/api/employees')
+            .then(response => response.json())
+            .then(data => {
+                const employeeList = document.getElementById('employee-list');
+                data.forEach(employee => {
+                    const div = document.createElement('div');
+                    div.textContent = `${employee.employeeName} - ${employee.designation}`;
+                    employeeList.appendChild(div);
+                });
+            })
+            .catch(error => console.error('Error fetching employee data:', error));
+    
+        const form = document.getElementById('employee-form');
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+    
+            const employeeData = {
+                employeeName: form.employeeName.value,
+                mobile: form.mobile.value,
+                email: form.email.value,
+                salary: parseFloat(form.salary.value),
+                designation: form.designation.value,
+                alternativeMobile: form.alternativeMobile.value
+            };
+    
+            fetch('http://localhost:8080/api/employees', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(employeeData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Employee added:', data);
+                const div = document.createElement('div');
+                div.textContent = `${data.employeeName} - ${data.designation}`;
+                document.getElementById('employee-list').appendChild(div);
+                form.reset();
+            })
+            .catch(error => console.error('Error adding employee:', error));
+        });
+    });
+</script>    
+                
+</body>
+</html>

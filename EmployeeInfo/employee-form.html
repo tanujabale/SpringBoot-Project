@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Employee Form</title>
+    <link rel="stylesheet" href="style.css">
+    
+</head>
+<body>
+    <h1>Create / Update Employee</h1>
+    <form th:action="@{/employees}" th:object="${employee}" method="post">
+        <label for="employeeName">Name:</label>
+        <input type="text" id="employeeName" name="employeeName" th:field="*{employeeName}"/>
+        <br/>
+        <label for="dateOfJoining">Date of Joining:</label>
+        <input type="date" id="dateOfJoining" name="dateOfJoining" th:field="*{dateOfJoining}"/>
+        <br/>
+        <label for="mobile">Mobile:</label>
+        <input type="text" id="mobile" name="mobile" th:field="*{mobile}"/>
+        <br/>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" th:field="*{email}"/>
+        <br/>
+        <label for="salary">Salary:</label>
+        <input type="number" id="salary" name="salary" th:field="*{salary}"/>
+        <br/>
+        <label for="designation">Designation:</label>
+        <input type="text" id="designation" name="designation" th:field="*{designation}"/>
+        <br/>
+        <label for="alternativeMobile">Alternative Mobile:</label>
+        <input type="text" id="alternativeMobile" name="alternativeMobile" th:field="*{alternativeMobile}"/>
+        <br/>
+        <button type="submit">Save</button>
+    </form>
+    <a href="/employees">Back to List</a>
+</body>
+</html>
