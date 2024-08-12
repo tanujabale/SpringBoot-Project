@@ -1,0 +1,82 @@
+/* style1.css */
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f4f7fa;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    min-height: 100vh;
+    color: #333;
+}
+
+h2 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+table {
+    width: 90%;
+    max-width: 1000px;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+thead {
+    background-color: #2193b0;
+    color: #fff;
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+}
+
+th {
+    font-weight: bold;
+}
+
+tr:nth-child(even) {
+    background-color: #f4f7fa;
+}
+
+tr:hover {
+    background-color: #e3e9f0;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"] {
+    background-color: #6dd5ed;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #2193b0;
+    transform: translateY(-2px);
+}
+
+a {
+    text-decoration: none;
+    color: #2193b0;
+    font-weight: 600;
+    transition: color 0.3s ease;
+    margin-top: 10px;
+}
+
+a:hover {
+    color: #6dd5ed;
+}

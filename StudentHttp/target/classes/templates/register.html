@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Student Registration</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <h1>Student Registration Form</h1>
+
+    <form id="registrationForm">
+        <div>
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" />
+            <div id="nameError" class="error-message"></div>
+        </div>
+        
+        <div>
+            <label for="gender">Gender:</label>
+            <select id="gender" name="gender">
+                <option value="" disabled selected>Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+            </select>
+            <div id="genderError" class="error-message"></div>
+        </div>
+        
+        <div>
+            <label for="dateOfBirth">Date of Birth:</label>
+            <input type="date" id="dateOfBirth" name="dateOfBirth" max="" />
+            <div id="dateOfBirthError" class="error-message"></div>
+        </div>
+        
+        <div>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" />
+            <div id="emailError" class="error-message"></div>
+        </div>
+        
+        <div>
+            <label for="phoneNumber">Phone:</label>
+            <input type="text" id="phoneNumber" name="phoneNumber" />
+            <div id="phoneNumberError" class="error-message"></div>
+        </div>
+        
+        <div>
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" />
+            <div id="usernameError" class="error-message"></div>
+        </div>
+        
+        <div>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" />
+            <div id="passwordError" class="error-message"></div>
+        </div>
+        
+        <div>
+            <button type="submit">Register</button>
+        </div>
+    </form>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const dateOfBirthInput = document.getElementById("dateOfBirth");
+        const today = new Date();
+        const fiveYearsAgo = new Date(today.getFullYear() - 5, today.getMonth(), today.getDate()).toISOString().split('T')[0];
+        dateOfBirthInput.setAttribute("max", fiveYearsAgo);  // Set max date to 5 years ago
+
+        document.getElementById("registrationForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            const jsonData = JSON.stringify(Object.fromEntries(formData));
+
+            const dateOfBirth = new Date(formData.get("dateOfBirth"));
+            if (dateOfBirth > new Date()) {
+                displayErrors({ dateOfBirth: "Date of birth cannot be in the future" });
+                return;
+            }
+
+            fetch("/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: jsonData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 201) {
+                    alert("Registration successful");
+                    window.location.href = "/students";
+                } else if (data.status === 409) {
+                    alert(data.message);
+                } else {
+                    displayErrors(data.errors);
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+            });
+        });
+
+        function displayErrors(errors) {
+            clearErrors();
+            for (const [field, message] of Object.entries(errors)) {
+                const errorElement = document.getElementById(`${field}Error`);
+                if (errorElement) {
+                    errorElement.innerText = message;
+                }
+            }
+        }
+
+        function clearErrors() {
+            const errorElements = document.querySelectorAll(".error-message");
+            errorElements.forEach(element => element.innerText = "");
+        }
+    });
+    </script>
+</body>
+</html>
