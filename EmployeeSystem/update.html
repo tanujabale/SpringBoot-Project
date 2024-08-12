@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Update Employee</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <h1>Update Employee</h1>
+
+    <form id="updateForm" th:action="@{/employees/update/{id}(id=${employee.employeeId})}" method="post">
+        <div>
+            <label for="employeeName">Name:</label>
+            <input type="text" id="employeeName" name="employeeName" th:value="${employee.employeeName}" required />
+            <div id="employeeNameError" class="error-message"></div>
+        </div>
+        
+        <div>
+            <label for="dateOfJoining">Date of Joining:</label>
+            <input type="date" id="dateOfJoining" name="dateOfJoining" th:value="${employee.dateOfJoining}" max="" required />
+            <div id="dateOfJoiningError" class="error-message"></div>
+        </div>
+        
+        <div>
+            <label for="mobile">Mobile:</label>
+            <input type="text" id="mobile" name="mobile" th:value="${employee.mobile}" required />
+            <div id="mobileError" class="error-message"></div>
+        </div>
+        
+        <div>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" th:value="${employee.email}" required />
+            <div id="emailError" class="error-message"></div>
+        </div>
+
+        <div>
+            <label for="alternativeMobile">Alternative Mobile:</label>
+            <input type="text" id="alternativeMobile" name="alternativeMobile" th:value="${employee.alternativeMobile}" />
+            <div id="alternativeMobileError" class="error-message"></div>
+        </div>
+
+        <div>
+            <label for="salary">Salary:</label>
+            <input type="number" id="salary" name="salary" th:value="${employee.salary}" required />
+            <div id="salaryError" class="error-message"></div>
+        </div>
+
+        <div>
+            <label for="designation">Designation:</label>
+            <input type="text" id="designation" name="designation" th:value="${employee.designation}" required />
+            <div id="designationError" class="error-message"></div>
+        </div>
+        
+        <div>
+            <button type="submit">Update</button>
+        </div>
+    </form>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const dateOfJoiningInput = document.getElementById("dateOfJoining");
+        const today = new Date().toISOString().split('T')[0];
+        dateOfJoiningInput.setAttribute("max", today);  // Set max date to today
+
+        document.getElementById("updateForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            const jsonData = JSON.stringify(Object.fromEntries(formData));
+
+            fetch(form.action, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: jsonData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 200) {
+                    alert("Update successful");
+                    window.location.href = "/employees";
+                } else if (data.status === 409) {
+                    alert(data.message);
+                } else {
+                    displayErrors(data.errors);
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+            });
+        });
+
+        function displayErrors(errors) {
+            clearErrors();
+            for (const [field, message] of Object.entries(errors)) {
+                const errorElement = document.getElementById(`${field}Error`);
+                if (errorElement) {
+                    errorElement.innerText = message;
+                }
+            }
+        }
+
+        function clearErrors() {
+            const errorElements = document.querySelectorAll(".error-message");
+            errorElements.forEach(element => element.innerText = "");
+        }
+    });
+    </script>
+</body>
+</html>

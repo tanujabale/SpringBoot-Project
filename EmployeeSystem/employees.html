@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registered Employees</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <h2>Registered Employees</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Date of Joining</th>
+                <th>Mobile</th>
+                <th>Email</th>
+                <th>Alternative Mobile</th>
+                <th>Salary</th>
+                <th>Designation</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="employee : ${employees}">
+                <td th:text="${employee.employeeId}"></td>
+                <td th:text="${employee.employeeName}"></td>
+                <td th:text="${employee.dateOfJoining}"></td>
+                <td th:text="${employee.mobile}"></td>
+                <td th:text="${employee.email}"></td>
+                <td th:text="${employee.alternativeMobile}"></td>
+                <td th:text="${employee.salary}"></td>
+                <td th:text="${employee.designation}"></td>
+                <td>
+                    <form th:action="@{/employees/edit/{id}(id=${employee.employeeId})}">
+                        <button type="submit" onclick="return confirm('Are you sure you want to update this employee?')">Update</button>
+                    </form>
+                    <form th:action="@{/employees/delete/{id}(id=${employee.employeeId})}" method="post">
+                        <button type="submit" onclick="return confirm('Are you sure you want to delete this employee?')">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <a href="/register">Register New Employee</a>
+</body>
+</html>

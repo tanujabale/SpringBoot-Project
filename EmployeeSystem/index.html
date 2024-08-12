@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Management</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Employee List</h1>
+    <div id="employeeList"></div>
+
+    <script>
+   // Fetch all employees
+async function fetchEmployees() {
+    try {
+        const response = await fetch('http://localhost:8080/api/employees');
+        if (!response.ok) {
+            throw new Error('Failed to fetch employees');
+        }
+        const employees = await response.json();
+        console.log(employees);
+        // Process and display data on the frontend
+    } catch (error) {
+        console.error('Error fetching employees:', error);
+    }
+}
+
+// Call the function to load data
+fetchEmployees();
+
+    </script>
+</body>
+</html>

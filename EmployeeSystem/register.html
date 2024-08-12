@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Employee Registration</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <h1>Employee Registration Form</h1>
+
+    <form id="registrationForm">
+        <div>
+            <label for="employeeName">Name:</label>
+            <input type="text" id="employeeName" name="employeeName" required />
+            <div id="employeeNameError" class="error-message"></div>
+        </div>
+        
+        <div>
+            <label for="dateOfJoining">Date of Joining:</label>
+            <input type="date" id="dateOfJoining" name="dateOfJoining" max="" required />
+            <div id="dateOfJoiningError" class="error-message"></div>
+        </div>
+        
+        <div>
+            <label for="mobile">Mobile:</label>
+            <input type="text" id="mobile" name="mobile" required />
+            <div id="mobileError" class="error-message"></div>
+        </div>
+        
+        <div>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required />
+            <div id="emailError" class="error-message"></div>
+        </div>
+
+        <div>
+            <label for="alternativeMobile">Alternative Mobile:</label>
+            <input type="text" id="alternativeMobile" name="alternativeMobile" />
+            <div id="alternativeMobileError" class="error-message"></div>
+        </div>
+
+        <div>
+            <label for="salary">Salary:</label>
+            <input type="number" id="salary" name="salary" required />
+            <div id="salaryError" class="error-message"></div>
+        </div>
+
+        <div>
+            <label for="designation">Designation:</label>
+            <input type="text" id="designation" name="designation" required />
+            <div id="designationError" class="error-message"></div>
+        </div>
+        
+        <div>
+            <button type="submit">Register</button>
+        </div>
+    </form>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const dateOfJoiningInput = document.getElementById("dateOfJoining");
+        const today = new Date().toISOString().split('T')[0];
+        dateOfJoiningInput.setAttribute("max", today);  // Set max date to today
+
+        document.getElementById("registrationForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            const jsonData = JSON.stringify(Object.fromEntries(formData));
+
+            fetch("/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: jsonData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 201) {
+                    alert("Registration successful");
+                    window.location.href = "/employees";
+                } else if (data.status === 409) {
+                    alert(data.message);
+                } else {
+                    displayErrors(data.errors);
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+            });
+        });
+
+        function displayErrors(errors) {
+            clearErrors();
+            for (const [field, message] of Object.entries(errors)) {
+                const errorElement = document.getElementById(`${field}Error`);
+                if (errorElement) {
+                    errorElement.innerText = message;
+                }
+            }
+        }
+
+        function clearErrors() {
+            const errorElements = document.querySelectorAll(".error-message");
+            errorElements.forEach(element => element.innerText = "");
+        }
+    });
+    </script>
+</body>
+</html>
